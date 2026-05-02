@@ -25,22 +25,29 @@ module WritebackRegister(
         input logic en,
         input logic clr,
         
-        input logic [31:0] DM [3:0], //Datapath MEMORY stage
-        
-        output logic [31:0] DW [3:0] //Datapath WRITEBACK stage
+        input logic [31:0] DM_32bit [2:0],      //Datapath MEMORY stage 32 bit
+        input logic [4:0] DM_5bit,              //Datapath MEMORY stage 5 bit
+        output logic [31:0] DW_32bit [2:0],     //Datapath WRITEBACK stage 32 bit
+        output logic [4:0] DW_5bit              //Datapath WRITEBACK stage 5 bit
     );
     
     always_ff @(posedge clk) begin
         if(clr) begin
             //Datapath  
-            for(int i = 0; i < 4; i += 1) begin
-                DW[i] <= 32'b0;
+            for(int i = 0; i < 3; i += 1) begin
+                DW_32bit[i] <= 32'b0;
+            end
+            for(int i = 0; i < 1; i += 1) begin
+                DW_5bit[i] <= 5'b0;
             end
         end 
         else if(en) begin
             //Datapath
-            for(int i = 0; i < 4; i += 1) begin
-                DW[i] <= DM[i];
+            for(int i = 0; i < 3; i += 1) begin
+                DW_32bit[i] <= DM_32bit[i];
+            end
+            for(int i = 0; i < 1; i += 1) begin
+                DW_5bit[i] <= DM_5bit[i];
             end
         end
     end
