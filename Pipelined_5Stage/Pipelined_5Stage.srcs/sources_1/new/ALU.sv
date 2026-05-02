@@ -13,7 +13,7 @@ module ALU(
     
     //sum or diff
     mux2_1_32bit B_mux(B, ~B, ALUControl[0], B_ALU); 
-    prefix_adder ALU_Adder(
+    Prefix_adder ALU_Adder(
         .a(A), 
         .b(B_ALU),
         .cin(ALUControl[0]), 

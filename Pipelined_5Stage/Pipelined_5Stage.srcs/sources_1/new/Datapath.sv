@@ -32,12 +32,19 @@ module Datapath(
         input logic FlushD,
       
         //EXECUTE stage
+        input logic FlushE,
         input logic PCSrcE,
+        input logic ForwardAE,
+        input logic ForwardBE,
+        input logic ALUSrcSelectBE,
+        input logic [2:0] ALUControlE,
         
         //MEMORY stage
+        input logic DataMemoryWE,
         
         //WRITEBACK stage
-        input logic RegfileWriteEnableW
+        input logic RegfileWriteEnableW,
+        input logic WritebackResultSourceW
     );
     
     //FETCH stage wires
@@ -133,14 +140,131 @@ module Datapath(
     logic [31:0] PCPlusE;
     logic [31:0] PCDE;
     //from EXECUTE stage
+    logic [31:0] ALUSrcAE, ALUSrcBE;
+    logic [31:0] WriteDataE;
+    logic [31:0] PCPlusImmE;
+    logic [31:0] ALUResultE;
+    logic ZeroE;
+    logic NegativeE;
+    logic OverflowE;
+    logic CarryE;
+    
      
+    //Execute register
     ExecuteRegister executeRegister(
         .clk(clk),
         .en(1'b1),
-        .clr(1'b0),
+        .clr(FlushE),
         
         .DD({Rd1D, Rd2D, RSrc1D, RSrc2D, ImmExtD, RdD, PCPlus4, PCD}),
         .DE({Rd1E, Rd2E, RSrc1E, RSrc2E, ImmExtE, RdE, PCPlusE, PCDE})
     );
+    
+    //4:1 Multiplexer for ALU A (Forward or not)
+    mux4_1_32bit ALUAMux(
+        .a(Rd1E),               //Register (00)
+        .b(WritebackResultW),   //changed Register from WRITEBACK stage (01) -> Forwarding
+        .c(ALUResultM),         //changed Register from MEMORY stage (10) -> Forwarding
+        .d(),                   // -
+        .s(ForwardAE),          //Should be forwarded or not
+        .q(ALUSrcAE)             //ALU Source A
+    );
+    //4:1 Multiplexer for ALU B (Forward or not)
+    mux4_1_32bit ALUBMuxForward(
+        .a(Rd2E),               //Register (00)
+        .b(WritebackResultW),   //changed Register from WRITEBACK stage (01) -> Forwarding
+        .c(ALUResultM),         //changed Register from MEMORY stage (10) -> Forwarding
+        .d(),                   // -
+        .s(ForwardBE),                   //Should be forwarded or not
+        .q(WriteDataE)                    //ALU Source B
+    );
+    //2:1 Multiplexer for ALU B (Register or Immediate)
+    mux2_1_32bit ALUBMuxImmediate(
+        .a(WriteDataE),
+        .b(ImmExtE),
+        .s(ALUSrcSelectBE),
+        .q(ALUSrcBE)
+    );
+    
+    //ALU
+    ALU alu(
+        .A(ALUSrcAE),
+        .B(ALUSrcBE),
+        .ALUControl(ALUControlE),
+        .Y(ALUResultE),
+        .Zero(ZeroE),
+        .Negative(NegativeE),
+        .Overflow(OverflowE),
+        .Carry(CarryE)
+    );    
+    
+    //Program Counter + Immediate (for Branch and Jump instructions)
+    Prefix_adder PCPlusImmAdder(
+        .a(PCE),
+        .b(ImmExtE),
+        .cin(1'b0),
+        .sum(PCPlusImmE),
+        .cout()
+    );
+    
+    //---Fourth stage - MEMORY stage---
+    //saved from EXECUTE stage 
+    logic [31:0] ALUResultM;
+    logic [31:0] WriteDataE;
+    logic [31:0] RdM;
+    logic [31:0] PCPlus4M;
+    //MEMORY stage
+    logic [31:0] MemoryDataM;
+    
+    
+    //Memory Register
+    MemoryRegister memoryRegister(
+        .clk(clk),
+        .en(1'b1),
+        .clr(1'b0),
+        
+        .DE({ALUResultE, WriteDataE, RdE, PCPlus4E}),
+        .DM({ALUResultM, WriteDataM, RdM, PCPlus4M})
+    );
+    
+    //Data Memory
+    DataMemory dataMemory(
+        .clk(clk),
+        .WEN(DataMemoryWE),
+        .A(ALUResultM),
+        .WD(WriteDataE),
+        .RD(MemoryDataM)
+    );
+    
+    
+    //---Fifth stage - WRITEBACK stage---
+    //saved from MEMORY stage
+    logic [31:0] ALUResultW;
+    logic [31:0] MemoryDataW;
+    logic [31:0] RdW;
+    logic [31:0] PCPlus4W;
+    //WRITEBACK stage
+    logic [31:0] WritebackResultW;
+    
+    //Writeback Register
+    WritebackRegister wriebackRegister(
+        .clk(),
+        .en(),
+        .clr(),
+        
+        .DM({ALUResultM, MemoryDataM, RdM, PCPlus4M}),
+        .DW({ALUResultW, MemoryDataW, RdW, PCPlus4W})
+    );
+    
+    //4:1 Multiplexer for WD3 of RegisterFile 
+    mux4_1_32bit WritebackMultiplexer(
+        .a(PCPlus4W),               // (00)
+        .b(MemDataW),               // (01)
+        .c(ALUResultW),             // (10)
+        .d(),                       // -
+        .s(WritebackResultSourceW),
+        .q(WritebackResultW)
+    );
+    
     
 endmodule
