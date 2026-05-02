@@ -19,38 +19,37 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module MemoryRegister(
         input logic clk,
         input logic en,
         input logic clr,
         
-        input logic [31:0] DE_32bit [2:0],      //Datapath EXECUTE stage 32 bit
-        input logic [4:0] DE_5bit,              //Datapath EXECUTE stage 5 bit
-        output logic [31:0] DM_32bit [2:0],     //Datapath MEMORY stage 32 bit
-        output logic [4:0] DM_5bit              //Datapath MEMORY stage 5 bit
+        input logic [2:0][31:0] DE_32bit, 
+        input logic [4:0]       DE_5bit,  
+        
+        input logic [1:0] CE_2bit,    
+        input logic [1:0] CE_1bit,    
+        
+        output logic [2:0][31:0] DM_32bit, 
+        output logic [4:0]       DM_5bit,  
+        
+        output logic [1:0] CM_2bit,    
+        output logic [1:0] CM_1bit    
     );
     
     always_ff @(posedge clk) begin
         if(clr) begin
-            //Datapath  
-            for(int i = 0; i < 3; i += 1) begin
-                DM_32bit[i] <= 32'b0;
-            end
-            for(int i = 0; i < 1; i += 1) begin
-                DM_5bit[i] <= 5'b0;
-            end
+            DM_32bit <= '0;
+            DM_5bit  <= '0;
+            CM_2bit  <= '0;
+            CM_1bit  <= '0;
         end 
         else if(en) begin
-            //Datapath
-            for(int i = 0; i < 3; i += 1) begin
-                DM_32bit[i] <= DE_32bit[i];
-            end
-            for(int i = 0; i < 1; i += 1) begin
-                DM_5bit[i] <= DE_5bit[i];
-            end
+            DM_32bit <= DE_32bit;
+            DM_5bit  <= DE_5bit;
+            CM_2bit  <= CE_2bit;
+            CM_1bit  <= CE_1bit;
         end
     end
-    
 endmodule
 

@@ -23,28 +23,32 @@
 module Datapath(
         input clk,
         input reset,
-        //select signals
+        
+        //Control Unit
+        input logic ALUSrcSelectBD,  
+        input logic [2:0] ALUControlD,
+        input logic JumpD,
+        input logic BranchD,
+        //for MEMORY stage
+        input logic DataMemoryWED,
+        //for WRITEBACK stage
+        input logic [1:0] WritebackResultSourceD,
+        input logic RegfileWriteEnableD,
+        
+        
+        //Hazard Unit signals
         //FETCH stage
-        input logic StallF, //stalling FETCH state
+        input logic StallF, //HazardUnit - TODO
         
         //DECODE stage
-        input logic StallD,
-        input logic FlushD,
+        input logic StallD, //HazardUnit - TODO
+        input logic FlushD, //HazardUnit - TODO
       
         //EXECUTE stage
-        input logic FlushE,
-        input logic PCSrcE,
-        input logic [1:0] ForwardAE,
-        input logic [1:0] ForwardBE,
-        input logic ALUSrcSelectBE,
-        input logic [2:0] ALUControlE,
-        
-        //MEMORY stage
-        input logic DataMemoryWEM,
-        
-        //WRITEBACK stage
-        input logic RegfileWriteEnableW,
-        input logic [1:0] WritebackResultSourceW
+        input logic FlushE, //HazardUnit - TODO
+        input logic PCSrcE, //HazardUnit - TODO
+        input logic [1:0] ForwardAE, //HazardUnit - TODO
+        input logic [1:0] ForwardBE  //HazardUnit - TODO
     );
     
     //FETCH stage wires
@@ -149,6 +153,15 @@ module Datapath(
     logic OverflowE;
     logic CarryE;
     
+    //Control Unit signals
+    logic ALUSrcSelectBE;
+    logic [2:0] ALUControlE;
+    logic JumpE;
+    logic BranchE;
+    logic DataMemoryWEE;
+    logic [1:0] WritebackResultSourceE;
+    logic RegfileWriteEnableE;
+    
      
     //Execute register
     ExecuteRegister executeRegister(
@@ -156,10 +169,19 @@ module Datapath(
         .en(1'b1),
         .clr(FlushE),
         
-        .DD32_bit({Rd1D, Rd2D, ImmExtD, PCPlus4D, PCD}),
-        .DD5_bit({RSrc1D, RSrc2D, RdD}),
-        .DE32_bit({Rd1E, Rd2E, ImmExtE, PCPlus4E, PCE}),
-        .DE5_bit({RSrc1E, RSrc2E, RdE})
+        //Datapath
+        .DD_32bit({Rd1D, Rd2D, ImmExtD, PCPlus4D, PCD}),
+        .DD_5bit({RSrc1D, RSrc2D, RdD}),
+        .DE_32bit({Rd1E, Rd2E, ImmExtE, PCPlus4E, PCE}),
+        .DE_5bit({RSrc1E, RSrc2E, RdE}),
+        
+        //Control Unit signals
+        .CD_3bit(ALUControlD),
+        .CD_2bit(WritebackResultSourceD),
+        .CD_1bit({ALUSrcSelectBD, JumpD, BranchD, DataMemoryWED, RegfileWriteEnableD}),
+        .CE_3bit(ALUControlE),
+        .CE_2bit(WritebackResultSourceE),
+        .CE_1bit({ALUSrcSelectBE, JumpE, BranchE, DataMemoryWEE, RegfileWriteEnableE})
     );
     
     //4:1 Multiplexer for ALU A (Forward or not)
@@ -218,6 +240,11 @@ module Datapath(
     //MEMORY stage
     logic [31:0] MemoryDataM;
     
+    //Controlpath
+    logic DataMemoryWEM;
+    logic [1:0] WritebackResultSourceM;
+    logic RegfileWriteEnableM;
+    
     
     //Memory Register
     MemoryRegister memoryRegister(
@@ -228,7 +255,13 @@ module Datapath(
         .DE_32bit({ALUResultE, WriteDataE, PCPlus4E}),
         .DE_5bit(RdE),
         .DM_32bit({ALUResultM, WriteDataM, PCPlus4M}),
-        .DM_5bit(RdM)
+        .DM_5bit(RdM),
+        
+        .CE_2bit(WritebackResultSourceE),
+        .CE_1bit({DataMemoryWEE, RegfileWriteEnableE}),
+        
+        .CM_2bit(WritebackResultSourceM),
+        .CM_1bit({DataMemoryWEM, RegfileWriteEnableM})
     );
     
     //Data Memory
@@ -250,6 +283,11 @@ module Datapath(
     //WRITEBACK stage
     logic [31:0] WritebackResultW;
     
+    //Controlpath
+    logic [1:0] WritebackResultSourceW;
+    logic RegfileWriteEnableW;
+    
+    
     //Writeback Register
     WritebackRegister writebackRegister(
         .clk(clk),
@@ -259,7 +297,14 @@ module Datapath(
         .DM_32bit({ALUResultM, MemoryDataM, PCPlus4M}),
         .DM_5bit(RdM),
         .DW_32bit({ALUResultW, MemoryDataW, PCPlus4W}),
-        .DW_5bit(RdW)
+        .DW_5bit(RdW),
+        
+        
+        .CM_2bit(WritebackResultSourceM),
+        .CM_1bit(RegfileWriteEnableM),
+        
+        .CW_2bit(WritebackResultSourceW),
+        .CW_1bit(RegfileWriteEnableW)
     );
     
     //4:1 Multiplexer for WD3 of RegisterFile 
