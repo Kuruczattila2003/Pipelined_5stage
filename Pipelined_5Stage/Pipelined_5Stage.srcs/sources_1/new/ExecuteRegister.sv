@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 02.05.2026 17:29:44
+// Create Date: 02.05.2026 17:52:37
 // Design Name: 
-// Module Name: DecodeRegister
+// Module Name: ExecuteRegister
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,25 +20,27 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module DecodeRegister(
+module ExecuteRegister(
         input logic clk,
         input logic en,
         input logic clr,
         
-        input logic [31:0] DF [2:0], //Datapath FETCH stage
+        input logic [31:0] DD [7:0], //Datapath DECODE stage
         
-        output logic [31:0] DD [2:0] //Datapath DECODE stage
+        output logic [31:0] DE [7:0] //Datapath EXECUTE stage
     );
     
     always_ff @(posedge clk) begin
         if(clr) begin
-            for(int i = 0; i < 3; i += 1) begin
-                DD[i] <= 32'b0;
+            //Datapath  
+            for(int i = 0; i < 8; i += 1) begin
+                DE[i] <= 32'b0;
             end
-        end
+        end 
         else if(en) begin
-            for(int i = 0; i < 3; i += 1) begin
-                DD[i] <= DF[i];
+            //Datapath
+            for(int i = 0; i < 8; i += 1) begin
+                DE[i] <= DD[i];
             end
         end
     end
