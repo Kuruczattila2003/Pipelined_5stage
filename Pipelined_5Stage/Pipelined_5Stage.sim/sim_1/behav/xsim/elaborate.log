@@ -1,0 +1,36 @@
+Vivado Simulator v2025.2.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/AMDDesignTools/2025.2.1/Vivado/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot CPU_5staged_pipelined_tb_behav xil_defaultlib.CPU_5staged_pipelined_tb xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.ControlUnit
+Compiling module xil_defaultlib.mux2_1
+Compiling module xil_defaultlib.mux2_1_32bit_default
+Compiling module xil_defaultlib.FlipFlop_32bit
+Compiling module xil_defaultlib.black_box
+Compiling module xil_defaultlib.Prefix_adder_default
+Compiling module xil_defaultlib.InstructionMemory
+Compiling module xil_defaultlib.DecodeRegister
+Compiling module xil_defaultlib.RegisterFile
+Compiling module xil_defaultlib.Extender
+Compiling module xil_defaultlib.ExecuteRegister
+Compiling module xil_defaultlib.mux4_1
+Compiling module xil_defaultlib.mux4_1_32bit_default
+Compiling module xil_defaultlib.mux8_1
+Compiling module xil_defaultlib.mux8_1_32bit_default
+Compiling module xil_defaultlib.ALU
+Compiling module xil_defaultlib.MemoryRegister
+Compiling module xil_defaultlib.DataMemory
+Compiling module xil_defaultlib.WritebackRegister
+Compiling module xil_defaultlib.Datapath
+Compiling module xil_defaultlib.HazardUnit
+Compiling module xil_defaultlib.CPU
+Compiling module xil_defaultlib.CPU_5staged_pipelined_tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot CPU_5staged_pipelined_tb_behav

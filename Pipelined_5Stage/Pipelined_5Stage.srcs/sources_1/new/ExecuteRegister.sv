@@ -4,6 +4,7 @@ module ExecuteRegister(
         input logic clk,
         input logic en,
         input logic clr,
+        input logic reset,
         
         input logic [4:0][31:0] DD_32bit, 
         input logic [2:0][4:0]  DD_5bit,   
@@ -21,7 +22,7 @@ module ExecuteRegister(
     );
     
     always_ff @(posedge clk) begin
-        if(clr) begin
+        if(clr || reset) begin
             DE_32bit <= '0; 
             DE_5bit  <= '0; 
             CE_3bit  <= '0;

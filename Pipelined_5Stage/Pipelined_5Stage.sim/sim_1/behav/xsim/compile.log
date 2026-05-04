@@ -1,0 +1,43 @@
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/ALU.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ALU
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/CPU.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module CPU
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/ControlUnit.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ControlUnit
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/Datapath.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Datapath
+WARNING: [VRFC 10-2938] 'PCPlusImmE' is already implicitly declared on line 80 [C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/Datapath.sv:174]
+WARNING: [VRFC 10-2938] 'ALUResultM' is already implicitly declared on line 218 [C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/Datapath.sv:266]
+WARNING: [VRFC 10-2938] 'WritebackResultW' is already implicitly declared on line 141 [C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/Datapath.sv:315]
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/DecodeRegister.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module DecodeRegister
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/ExecuteRegister.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ExecuteRegister
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/Extender.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Extender
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/FlipFlop_32bit.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module FlipFlop_32bit
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/HazardUnit.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module HazardUnit
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/InstructionMemory.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module InstructionMemory
+INFO: [VRFC 10-311] analyzing module DataMemory
+INFO: [VRFC 10-311] analyzing module RegisterFile
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/MemoryRegister.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MemoryRegister
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/Multiplexers.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mux2_1
+INFO: [VRFC 10-311] analyzing module mux4_1
+INFO: [VRFC 10-311] analyzing module mux8_1
+INFO: [VRFC 10-311] analyzing module mux2_1_32bit
+INFO: [VRFC 10-311] analyzing module mux4_1_32bit
+INFO: [VRFC 10-311] analyzing module mux8_1_32bit
+INFO: [VRFC 10-311] analyzing module Multiplexers
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/Prefix_adder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module full_adder
+INFO: [VRFC 10-311] analyzing module black_box
+INFO: [VRFC 10-311] analyzing module Prefix_adder
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sources_1/new/WritebackRegister.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module WritebackRegister
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/kuruc/CPU_Design/Pipelined_5stage/Pipelined_5Stage/Pipelined_5Stage.srcs/sim_1/new/CPU_5staged_pipelined_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module CPU_5staged_pipelined_tb

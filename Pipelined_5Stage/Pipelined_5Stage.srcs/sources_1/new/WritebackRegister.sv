@@ -24,6 +24,7 @@ module WritebackRegister(
         input logic clk,
         input logic en,
         input logic clr,
+        input logic reset,
         
         input logic [2:0][31:0] DM_32bit, 
         input logic [4:0]       DM_5bit,  
@@ -39,7 +40,7 @@ module WritebackRegister(
     );
     
     always_ff @(posedge clk) begin
-        if(clr) begin
+        if(clr || reset) begin
             DW_32bit <= '0;
             DW_5bit  <= '0;
             CW_2bit  <= '0;

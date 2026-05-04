@@ -38,17 +38,34 @@ module Datapath(
         
         //Hazard Unit signals
         //FETCH stage
-        input logic StallF, //HazardUnit - TODO
+        input logic StallF, 
         
         //DECODE stage
-        input logic StallD, //HazardUnit - TODO
-        input logic FlushD, //HazardUnit - TODO
+        input logic StallD,
+        input logic FlushD,
       
         //EXECUTE stage
-        input logic FlushE, //HazardUnit - TODO
-        input logic PCSrcE, //HazardUnit - TODO
-        input logic [1:0] ForwardAE, //HazardUnit - TODO
-        input logic [1:0] ForwardBE  //HazardUnit - TODO
+        input logic FlushE,
+        input logic [1:0] ForwardAE,
+        input logic [1:0] ForwardBE,  
+        
+        output logic [6:0] opcode,
+        output logic [2:0] funct3,
+        output logic [6:0] funct7,
+        
+        //hazard unit
+        output logic [4:0] RSrc1E, RSrc2E,
+        output logic [4:0] RdM,
+        output logic [4:0] RdW,
+        output logic RegfileWriteEnableM, RegfileWriteEnableW,
+        
+        //for lw check
+        output logic [4:0] RSrc1D, RSrc2D,
+        output logic [4:0] RdE,
+        output logic [1:0] WritebackResultSourceE,
+        
+        //branch instruction
+        output logic PCSrcE
     );
     
     //FETCH stage wires
@@ -97,7 +114,8 @@ module Datapath(
     logic [31:0] PCPlus4D;
     //from DECODE stage
     logic [31:0] Rd1D, Rd2D;
-    logic [4:0] RSrc1D, RSrc2D, RdD;
+    //logic [4:0] RSrc1D, RSrc2D;
+    logic [4:0] RdD;
     logic [31:0] ImmExtD;
     
     //pipeline register for Decode stage
@@ -125,6 +143,13 @@ module Datapath(
         .RD1(Rd1D), //output 1
         .RD2(Rd2D) //output 2
     );
+    
+    //output
+    assign opcode = InstrD[6:0];
+    assign funct3 = InstrD[14:12];
+    assign funct7 = InstrD[31:25];
+    
+    assign RdD = InstrD[11:7];
    
     //Extender Unit for extending immediate value of machine code instruction 
     Extender extenderUnit(
@@ -137,10 +162,10 @@ module Datapath(
     //saved from DECODE stage
     logic [31:0] Rd1E;
     logic [31:0] Rd2E;
-    logic [4:0] RSrc1E;
-    logic [4:0] RSrc2E;
+    //logic [4:0] RSrc1E;
+    //logic [4:0] RSrc2E;
     logic [31:0] ImmExtE;
-    logic [4:0] RdE;
+    //logic [4:0] RdE;
     logic [31:0] PCPlus4E;
     logic [31:0] PCE;
     //from EXECUTE stage
@@ -159,15 +184,17 @@ module Datapath(
     logic JumpE;
     logic BranchE;
     logic DataMemoryWEE;
-    logic [1:0] WritebackResultSourceE;
+    //logic [1:0] WritebackResultSourceE;
     logic RegfileWriteEnableE;
+    //logic PCSrcE;
     
-     
+        
     //Execute register
     ExecuteRegister executeRegister(
         .clk(clk),
         .en(1'b1),
         .clr(FlushE),
+        .reset(reset),
         
         //Datapath
         .DD_32bit({Rd1D, Rd2D, ImmExtD, PCPlus4D, PCD}),
@@ -222,6 +249,9 @@ module Datapath(
         .Carry(CarryE)
     );    
     
+    //send PC source select signal to PCReg
+    assign PCSrcE = (BranchE && ZeroE) || JumpE;
+    
     //Program Counter + Immediate (for Branch and Jump instructions)
     Prefix_adder PCPlusImmAdder(
         .a(PCE),
@@ -235,7 +265,7 @@ module Datapath(
     //saved from EXECUTE stage 
     logic [31:0] ALUResultM;
     logic [31:0] WriteDataM;
-    logic [4:0] RdM;
+    //logic [4:0] RdM;
     logic [31:0] PCPlus4M;
     //MEMORY stage
     logic [31:0] MemoryDataM;
@@ -243,7 +273,7 @@ module Datapath(
     //Controlpath
     logic DataMemoryWEM;
     logic [1:0] WritebackResultSourceM;
-    logic RegfileWriteEnableM;
+    //logic RegfileWriteEnableM;
     
     
     //Memory Register
@@ -251,6 +281,7 @@ module Datapath(
         .clk(clk),
         .en(1'b1),
         .clr(1'b0),
+        .reset(reset),
         
         .DE_32bit({ALUResultE, WriteDataE, PCPlus4E}),
         .DE_5bit(RdE),
@@ -278,14 +309,14 @@ module Datapath(
     //saved from MEMORY stage
     logic [31:0] ALUResultW;
     logic [31:0] MemoryDataW;
-    logic [4:0] RdW;
+    //logic [4:0] RdW;
     logic [31:0] PCPlus4W;
     //WRITEBACK stage
     logic [31:0] WritebackResultW;
     
     //Controlpath
     logic [1:0] WritebackResultSourceW;
-    logic RegfileWriteEnableW;
+    //logic RegfileWriteEnableW;
     
     
     //Writeback Register
@@ -293,6 +324,7 @@ module Datapath(
         .clk(clk),
         .en(1'b1),
         .clr(1'b0),
+        .reset(reset),
         
         .DM_32bit({ALUResultM, MemoryDataM, PCPlus4M}),
         .DM_5bit(RdM),
@@ -316,6 +348,5 @@ module Datapath(
         .s(WritebackResultSourceW),
         .q(WritebackResultW)
     );
-    
     
 endmodule

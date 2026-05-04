@@ -23,6 +23,7 @@ module MemoryRegister(
         input logic clk,
         input logic en,
         input logic clr,
+        input logic reset,
         
         input logic [2:0][31:0] DE_32bit, 
         input logic [4:0]       DE_5bit,  
@@ -38,7 +39,7 @@ module MemoryRegister(
     );
     
     always_ff @(posedge clk) begin
-        if(clr) begin
+        if(clr || reset) begin
             DM_32bit <= '0;
             DM_5bit  <= '0;
             CM_2bit  <= '0;
