@@ -77,7 +77,7 @@ module RegisterFile(
 
     assign registers[0] = 32'b0;
     
-    always_ff @(posedge clk) begin
+    always_ff @(negedge clk) begin
         if (WEN && (A3 != 5'b0)) begin 
             registers[A3] <= WD3;
         end
